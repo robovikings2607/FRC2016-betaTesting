@@ -33,7 +33,7 @@ public class Robot extends IterativeRobot {
 	Talon BackR;
 	Talon Hellovator1, Hellovator2;
 	Solenoid Saulenoid;
-	RobotDrive DriveRobot;
+	debugRobotDrive DriveRobot;
 	SmoothedEncoder encFL, encFR, encBL, encBR;
 	Encoder encVator;
 	Gyro gyroPyro;
@@ -77,7 +77,7 @@ public class Robot extends IterativeRobot {
     	encVator.reset();
     	bottomSwitch = new DigitalInput(8);			// reads false when switch is closed
     	topSwitch = new DigitalInput(9);			// reads false when switch is closed
-    	DriveRobot = new RobotDrive(FrontL, BackL, FrontR, BackR);
+    	DriveRobot = new debugRobotDrive(FrontL, BackL, FrontR, BackR);
     	DriveRobot.setInvertedMotor(MotorType.kFrontLeft, true);
     	DriveRobot.setInvertedMotor(MotorType.kRearLeft, true);
     	gyroPyro = new Gyro(Constants.gyroChannel);
@@ -184,7 +184,10 @@ public class Robot extends IterativeRobot {
 //    	iDash5s.getNumber("Vator Rate ", encVator.getRate());
     	
     	DriveRobot.mecanumDrive_Cartesian(driveValerie[0], driveValerie[1], driveValerie[2], 0);
-    
+    	if (++autoPulses % 25 == 0) {
+    		autoPulses = 0;
+    		System.out.println("x: " + driveValerie[0] + " y: " + driveValerie[1] + "z: " + driveValerie[2]);
+    	}
     }
     
     /**
@@ -199,6 +202,7 @@ public class Robot extends IterativeRobot {
     	encBR.reset();
     	
     }
+    
     
     public void autonomousInit(){
     	gyroPyro.reset();
@@ -217,12 +221,34 @@ public class Robot extends IterativeRobot {
     public void teleopInit(){
     	gyroPyro.reset();
     	correctedZ = 0.0;
+    	autoPulses = 0;
     }
     
     
     
     public void testPeriodic() {
-	
+    		if (sticktoriaJustice.getRawButton(1)) {
+               y = .5;
+               x = 0.0;
+           } else if (sticktoriaJustice.getRawButton(4)) {
+               y = -.5;
+               x = 0.0;
+           } else if (sticktoriaJustice.getRawButton(3)) {
+               y = 0.0;
+               x = .5;
+           } else if (sticktoriaJustice.getRawButton(2)) {
+               y = 0.0;
+               x = -.5;
+           } else {
+               y = 0.0;
+               x = 0.0;
+           } 
+    		
+    		FrontL.set(y);
+    		FrontR.set(y);
+    		BackL.set(y);
+    		BackR.set(y);
+    	
     }
 //    	if (i2cTick++ > 30){
 //    		i2cTick = 0;
