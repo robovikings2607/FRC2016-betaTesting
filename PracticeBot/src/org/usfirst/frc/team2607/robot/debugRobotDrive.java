@@ -184,6 +184,7 @@ public class debugRobotDrive implements MotorSafety {
     m_frontRightMotor = frontRightMotor;
     m_rearRightMotor = rearRightMotor;
     m_sensitivity = kDefaultSensitivity;
+    m_maxOutput = kDefaultMaxOutput;
     m_allocatedSpeedControllers = false;
     setupMotorSafety();
     drive(0, 0);
@@ -540,8 +541,12 @@ public class debugRobotDrive implements MotorSafety {
     wheelSpeeds[MotorType.kRearRight_val] = xIn + yIn - rotation;
 
     normalize(wheelSpeeds);
-    if (++pulseCount %25 == 0) {
-    	System.out.println("wheelSpeeds = " + wheelSpeeds);
+    if (++pulseCount % 50 == 0) {
+    	System.out.println("max Output: " + kDefaultMaxOutput);
+    	System.out.println("wheelSpeeds = FL: " + wheelSpeeds[MotorType.kFrontLeft_val] + 
+    					    "FR: " + wheelSpeeds[MotorType.kFrontRight_val] +
+    					    "RL: " + wheelSpeeds[MotorType.kRearLeft_val] + 
+    					    "RR: " + wheelSpeeds[MotorType.kRearRight_val]);
     	pulseCount = 0;
     }
     m_frontLeftMotor.set(wheelSpeeds[MotorType.kFrontLeft_val] * m_maxOutput, m_syncGroup);
